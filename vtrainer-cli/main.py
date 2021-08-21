@@ -2,36 +2,61 @@
 
 from config import WORKDIR
 from vt_ui_texts import *
+from os import system
 import sys
 
-vocabulary = dict()
+vocabulary = []
 
-WORKDIR = WORKDIR if len(sys.argv) < 2 else sys.argv[1]
-def clear_terminal():
-    print(chr(27) + "[2J")
+class Record:
+    def __init__(self, word, translation, succ = 0, fails = 0):
+        self.__word = word
+        self.__translation = translation
+        self.__succ = succ
+        self.__fails = fails
+
+    def iter_survey(self):
+        res = input(self.__word + ": ") == self.__translation
+        if res:
+            self.__succ += 1
+            print("Correct!")
+        else:
+            self.__fails += 1
+            print("Wrong :(")
+
+    def __str__(self):
+        return "Word: {}\nTranslation: {}\nSuccess attempts: {}\nFailed attempts: {}" \
+            .format(self.__word, self.__translation, self.__succ, self.__fails)
+
 
 def load_vocabulary(file="{}/vocabulary".format(WORKDIR)):
     with open(file, 'r') as voc_file:
         for voc_line in voc_file.readlines():
-            pair = voc_line.split()
-            vocabulary[pair[0]] = pair[1]
-
-def menu():
-    print(LOGO)
-    print(GREETING)
-    print(MENU)
-    cmd = input("Enter the command number: ")
-
-    if cmd == "1":
-        survey()
-    elif cmd == "2":
-        print("second")
+            word, translation, succ, fails = voc_line.split('\t')
+            vocabulary.append(Record(word, translation, int(succ), int(fails)))
 
 def survey():
-    clear_terminal()
-    for entry, translation in vocabulary.items():
-        print("{} ---- {}".format(entry, translation))
+    system("clear")
+    res = []
+    for record in vocabulary:
+        record.iter_survey()
+    print(res)
 
-if __name__ == '__main__':
+def load_words():
+    word = input("Enter the word: ")
+    translation = input()
+
+
+print(LOGO)
+
+if len(sys.argv) == 1:
+    print("\nHelp info")
+    sys.exit()
+print(GREETING)
+
+
+cmd = sys.argv[1]
+if cmd == 'load':
+    pass # load_words()
+elif cmd == 'survey':
     load_vocabulary()
-    menu()
+    survey()

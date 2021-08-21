@@ -14,4 +14,4 @@ MENU = '''
 0. Exit program
 '''
 
-GREETING = "\n*** Welcome to vtrainer! It`s a vocabulary trainer which will help you to note and learn all the words you want ***"
+GREETING = "*** Welcome to vtrainer! It`s a vocabulary trainer which will help you to note and learn all the words you want ***"
